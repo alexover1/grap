@@ -25,6 +25,7 @@ main :: () {
         } else {
             log_error("Not enough arguments were provided. (Wanted at most 2, but got %). A string to search for must be the first argument to the program.\n", free_args.count);
         }
+        return;
     }
 
     User_Data :: struct {
@@ -32,6 +33,7 @@ main :: () {
         file_pattern := "*";
 
         string_contains := #procedure_of_call contains("Hello, Sailor!", "Sailor");
+        string_index_of := #procedure_of_call find_index_from_left("Goodbye, Seaman.", "Seaman");
     }
 
     user_data: User_Data;
@@ -39,6 +41,7 @@ main :: () {
 
     if args.i {
         user_data.string_contains = contains_nocase;
+        user_data.string_index_of = find_index_from_left_nocase;
     }
 
     if free_args.count == 2 {
@@ -75,7 +78,7 @@ main :: () {
 
             found = string_contains(line, search_pattern);
             if found {
-                print("%(%): ", info.full_name, handler.line_number);
+                print("%:%: ", info.full_name, handler.line_number);
 
                 while line.count {
                     index := find_index_from_left(line, search_pattern);
@@ -98,3 +101,16 @@ main :: () {
 // Console display colors
 LINE_COLOR :: Console_Color.HI_CYAN;
 HIGHLIGHT_COLOR :: Console_Color.HI_RED;
+
+
+find_index_from_left_nocase :: (s: string, substring: string, start_index := 0) -> s64 {
+    if !substring return -1;
+
+    // This is SO SLOW! @Cleanup.
+    for i: start_index..s.count-substring.count {
+        t := slice(s, i, substring.count);
+        if equal_nocase(t, substring) return i;
+    }
+
+    return -1;
+}
