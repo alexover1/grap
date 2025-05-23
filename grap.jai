@@ -81,10 +81,10 @@ main :: () {
                 print("%:%: ", info.full_name, handler.line_number);
 
                 while line.count {
-                    index := find_index_from_left(line, search_pattern);
+                    index := string_index_of(line, search_pattern);
                     if index != -1 {
                         print_color("%", slice(line, 0, index), color = LINE_COLOR);
-                        print_color("%", search_pattern, color = HIGHLIGHT_COLOR);
+                        print_color("%", slice(line, index, search_pattern.count), color = HIGHLIGHT_COLOR);
                         advance(*line, index + search_pattern.count);
                     } else {
                         print_color("%", line, color = LINE_COLOR);
