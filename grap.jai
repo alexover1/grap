@@ -61,7 +61,8 @@ main :: () {
 
         handler: Text_File_Handler;
         handler.do_version_number = false;
-        handler.strip_comments_from_ends_of_lines = false;
+        handler.comment_character = 0;
+        // handler.strip_comments_from_ends_of_lines = false;
 
         defer deinit(*handler);
 
@@ -72,9 +73,13 @@ main :: () {
             line, found := consume_next_line(*handler);
             if !found break;
 
-            if contains(line, 0) {
-                break;
-            }
+            // NOTE(alex): I was using this to check for zeros in files, which
+            // is a bit of a hack to determine if the file is text or binary.
+            // But, we now use the Text_File_Handler's comment_character to
+            // skip anything after zero.
+            // if contains(line, 0) {
+            //     break;
+            // }
 
             found = string_contains(line, search_pattern);
             if found {
